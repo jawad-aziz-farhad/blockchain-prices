@@ -1,0 +1,30 @@
+services:
+  db:
+    image: postgres:15
+    container_name: postgres
+    env_file: env/.env.dev
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-crypto_prices}
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  blockchain-prices:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: blockchain-prices
+    env_file: env/.env.dev
+    environment:
+      POSTGRES_HOST: db
+    ports:
+      - '${APP_PORT:-3000}:3000'
+    depends_on:
+      - db
+    command: npm run start:dev
+
+volumes:
+  pgdata:
