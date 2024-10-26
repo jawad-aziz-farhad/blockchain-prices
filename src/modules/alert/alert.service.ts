@@ -21,7 +21,7 @@ export class AlertService {
     return alert;
   }
 
-  @Cron(CronExpression.EVERY_30_SECONDS)
+  @Cron(CronExpression.EVERY_30_MINUTES)
   async checkAlerts(): Promise<void> {
     const alerts = await this.alertRepository
       .createQueryBuilder('alert')
